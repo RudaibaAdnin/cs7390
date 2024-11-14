@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List of Lessons</title>
+    <!-- Bootstrap CSS for styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4" id="lessonTitle">List of Lessons</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card" aria-labelledby="lessonTitle">
+                    <div class="card-body">
+                        <form id="todo-form" aria-label="Add new lesson">
+                            <div class="input-group mb-3">
+                                <label for="todo-input" class="visually-hidden">New Lesson Name</label>
+                                <input type="text" class="form-control" id="todo-input" placeholder="Add New Lesson" required aria-required="true">
+                                <button class="btn btn-primary" type="submit" aria-label="Add lesson">Add</button>
+                            </div>
+                        </form>
+                        <ul class="list-group" id="todo-list" aria-describedby="lessonListDesc">
+                            <!-- Example item -->
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <a href="additionLesson.html" class="task-link">
+                                    <span class="task-text">Addition</span>
+                                </a>
+                                <div class="btn-group" role="group" aria-label="Task actions">
+                                    <button class="btn btn-danger btn-sm delete-btn" aria-label="Delete task">&#x2715;</button>
+                                    <button class="btn btn-primary btn-sm edit-btn" aria-label="Edit task">&#9998;</button>
+                                </div>
+                            </li>
+                            <!-- Tasks will be added here dynamically -->
+                        </ul>
+                        <p id="lessonListDesc" class="visually-hidden">Lessons can be edited or deleted using the buttons on the right.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Links to other pages -->
+        <h2 class="text-center mb-4 m-2">
+            <a href="makeMaterialsAccessible.html">Make Materials Accessible</a>
+        </h2>
+        <h2 class="text-center mb-4 m-2">
+            <a href="experienceReport.html">Learning about new Software</a>
+        </h2>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const form = document.getElementById("todo-form");
+            const todoList = document.getElementById("todo-list");
+            const taskInput = document.getElementById("todo-input");
+
+            form.addEventListener("submit", function(event) {
+                event.preventDefault();
+                const task = taskInput.value.trim();
+                if (task) {
+                    addTask(task);
+                    taskInput.value = '';
+                }
+            });
+
+            todoList.addEventListener("click", function(event) {
+                if (event.target.classList.contains("delete-btn")) {
+                    event.target.closest(".list-group-item").remove();
+                } else if (event.target.classList.contains("edit-btn")) {
+                    toggleEditState(event.target);
+                }
+            });
+
+            function addTask(task) {
+                const li = document.createElement("li");
+                li.className = "list-group-item d-flex justify-content-between align-items-center";
+                li.innerHTML = `
+                    <a href="editLesson.html?lesson=${encodeURIComponent(task)}" class="task-link">
+                        <span class="task-text">${task}</span>
+                    </a>
+                    <div class="btn-group" role="group" aria-label="Task actions">
+                        <button class="btn btn-danger btn-sm delete-btn" aria-label="Delete task">&#x2715;</button>
+                        <button class="btn btn-primary btn-sm edit-btn" aria-label="Edit task">&#9998;</button>
+                    </div>
+                `;
+                todoList.appendChild(li);
+            }
+
+            function toggleEditState(btn) {
+                const listItem = btn.closest(".list-group-item");
+                const link = listItem.querySelector(".task-link");
+                const taskText = link.querySelector(".task-text");
+                const editInput = listItem.querySelector("input[type=text]");
+                const isEditing = editInput && editInput.style.display === "block";
+                if (!isEditing) {
+                    const input = document.createElement("input");
+                    input.type = "text";
+                    input.className = "form-control";
+                    input.value = taskText.textContent;
+                    taskText.style.display = "none";
+                    btn.innerHTML = "&#10004;";
+                    listItem.insertBefore(input, btn.parentNode);
+                } else {
+                    taskText.textContent = editInput.value;
+                    link.href = `editLesson.html?lesson=${encodeURIComponent(editInput.value)}`; // Update link with new task name
+                    taskText.style.display = "";
+                    editInput.remove();
+                    btn.innerHTML = "&#9998;";
+                }
+            }
+
+            // Initialize default tasks
+            ["Subtraction", "Division", "Multiplication"].forEach(addTask);
+        });
+    </script>
+</body>
+
+</html>

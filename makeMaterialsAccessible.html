@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make Materials Accessible</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Make Materials Accessible</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <label class="form-label" for="customFile">Check if materials are Accessible or Not</label>
+                        <div class="input-group mb-3">
+                            <input type="file" class="form-control" id="customFile">
+                            <button class="btn btn-danger" type="button" onclick="checkFileAccessibility()">Check</button>
+                        </div>
+                        <button class="btn btn-success mb-3" type="button" onclick="generateAccessibilityReport()">Generate Accessibility Report</button>
+                        <div id="report-section" class="mt-4" style="display: none;">
+                            <h5>Accessibility Report</h5>
+                            <ul id="report-list" class="list-group"></ul>
+                        </div>
+                        <button class="btn btn-info mb-3" type="button" onclick="makePdfAccessible()">Make PDF Accessible with AI Tool</button>
+                        <!-- TA dropdown and Email button side by side -->
+                        <div class="d-flex align-items-center mt-3">
+                            <select id="select-ta" class="form-select me-2" style="width: auto;">
+                                <option value="">Select TA</option>
+                                <option value="john@example.com">TA John</option>
+                                <option value="jane@example.com">TA Jane</option>
+                                <option value="max@example.com">TA Max</option>
+                            </select>
+                            <button id="email-pdf-btn" class="btn btn-primary" onclick="sendPDF()" disabled>Send PDF to TA</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function checkFileAccessibility() {
+            const fileInput = document.getElementById('customFile');
+            if (!fileInput.files.length) {
+                alert('Please select a file to check.');
+                return;
+            }
+            const file = fileInput.files[0];
+            alert(file.type === 'application/pdf' ? 'The PDF is not accessible' : 'Please upload a PDF file for accessibility checking.');
+        }
+
+        function makePdfAccessible() {
+            const fileInput = document.getElementById('customFile');
+            if (!fileInput.files.length) {
+                alert('Please select a file to make accessible.');
+                return;
+            }
+            alert('The PDF has been made accessible using the AI tool.');
+        }
+
+        function generateAccessibilityReport() {
+            const report = [
+                { type: 'Figure', status: 'Not Accessible' },
+                { type: 'Table', status: 'Not Accessible' },
+                { type: 'Alt Text', status: 'Missing' },
+            ];
+
+            const reportSection = document.getElementById('report-section');
+            const reportList = document.getElementById('report-list');
+            reportList.innerHTML = ''; // Clear previous report
+            report.forEach(item => {
+                const listItem = document.createElement('li');
+                listItem.className = 'list-group-item';
+                listItem.textContent = `${item.type}: ${item.status}`;
+                reportList.appendChild(listItem);
+            });
+            reportSection.style.display = 'block';
+        }
+
+        document.getElementById('select-ta').addEventListener('change', function () {
+            const email = this.value;
+            document.getElementById('email-pdf-btn').disabled = !email;
+        });
+
+        function sendPDF() {
+            const email = document.getElementById('select-ta').value;
+            if (!email) {
+                alert('No TA selected.');
+                return;
+            }
+            alert(`PDF has been sent to ${email}.`);
+        }
+    </script>
+</body>
+
+</html>

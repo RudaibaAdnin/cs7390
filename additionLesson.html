@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Task: Addition Lesson</title>
+    <!-- Bootstrap CSS for styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4" id="main-title">Lesson: Addition</h1>
+        <div class="d-flex justify-content-center mb-4" role="group" aria-labelledby="main-title">
+            <!-- Combined action buttons and TA dropdown -->
+            <button id="check-updates-btn" class="btn btn-info mx-2" aria-label="Check for tool updates">Check for Tool Updates</button>
+            <button id="check-accessibility-btn" class="btn btn-warning mx-2" aria-label="Check worksheet accessibility">Check Worksheet Accessibility</button>
+            <select id="select-ta" class="form-select mx-2" style="width: auto;" aria-label="Select teaching assistant">
+                <option value="">Select TA</option>
+                <option value="john@example.com">TA John</option>
+                <option value="jane@example.com">TA Jane</option>
+                <option value="max@example.com">TA Max</option>
+            </select>
+            <button id="email-pdf-btn" class="btn btn-primary mx-2" onclick="sendPDF()" disabled aria-disabled="true">Email Page as PDF</button>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="text-center mb-3" id="task-list-title">Existing Tasks</h2>
+                        <section aria-labelledby="task-list-title">
+                            <!-- Existing Task 1 -->
+                            <div class="card mb-3" id="tasks-container" aria-live="polite">
+                                <div class="card-body">
+                                    <h3 class="card-title">Basic Addition</h3>
+                                    <p class="card-text">Learn to add single-digit numbers.</p>
+                                    <p><strong>Tools:</strong></p>
+                                    <ul>
+                                        <li id="tool-1">Talking Calculator</li>
+                                    </ul>
+                                    <a href="worksheet1.pdf" class="btn btn-secondary" download id="worksheet-1">Download Basic Addition Worksheet</a>
+                                    <button class="btn btn-danger float-end" onclick="deleteTask(this)">Delete Task</button>
+                                    <button class="btn btn-info float-end me-1" onclick="editTask(this)">Edit Task</button>
+                                </div>
+                            </div>
+
+                            <!-- New Existing Task 2 -->
+                            <div class="card mb-3" id="tasks-container" aria-live="polite">
+                                <div class="card-body">
+                                    <h3 class="card-title">Advanced Addition</h3>
+                                    <p class="card-text">Master addition of two-digit numbers.</p>
+                                    <p><strong>Tools:</strong></p>
+                                    <ul>
+                                        <li id="tool-2">Math Melodies</li>
+                                        <li id="tool-3">Screen Reader (Voiceover)</li>
+                                    </ul>
+                                    <a href="worksheet2.pdf" class="btn btn-secondary" download id="worksheet-2">Download Advanced Addition Worksheet</a>
+                                    <button class="btn btn-danger float-end" onclick="deleteTask(this)">Delete Task</button>
+                                    <button class="btn btn-info float-end me-1" onclick="editTask(this)">Edit Task</button>
+                                </div>
+                            </div>
+                        </section>
+
+                        <h2 class="text-center mb-3" id="new-task-title">Add New Task</h2>
+                        <form id="edit-task-form" aria-labelledby="new-task-title">
+                            <div class="mb-3">
+                                <label for="task-title" class="form-label">Task Title</label>
+                                <input type="text" class="form-control" id="task-title" required aria-required="true">
+                            </div>
+                            <div class="mb-3">
+                                <label for="task-description" class="form-label">Task Description</label>
+                                <textarea class="form-control" id="task-description" rows="2" aria-describedby="description-help"></textarea>
+                                <small id="description-help" class="form-text text-muted">Describe the task briefly.</small>
+                            </div>
+                            <div class="mb-3">
+                                <label for="task-tools" class="form-label">Tools Needed for this Task</label>
+                                <select class="form-select" id="task-tools" multiple aria-describedby="tools-help">
+                                    <option value="Screen Reader (Voiceover)" data-tool-id="1">Screen Reader (Voiceover)</option>
+                                    <option value="Math Melodies" data-tool-id="2">Math Melodies</option>
+                                    <option value="Talking Calculator" data-tool-id="3">Talking Calculator</option>
+                                </select>
+                                <small id="tools-help" class="form-text text-muted">Hold down Ctrl (Cmd on Mac) to select multiple tools.</small>
+                            </div>
+                            <div class="mb-3">
+                                <label for="customFile" class="form-label">Attach Worksheet</label>
+                                <input type="file" class="form-control" id="customFile" aria-describedby="file-help">
+                                <small id="file-help" class="form-text text-muted">Attach a worksheet PDF file if applicable.</small>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add Task</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('edit-task-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+            const title = document.getElementById('task-title').value;
+            const description = document.getElementById('task-description').value;
+            const toolsSelect = document.getElementById('task-tools');
+            const selectedTools = Array.from(toolsSelect.selectedOptions).map(option => ({
+                name: option.value,
+                id: option.dataset.toolId // Using custom data attributes to store tool IDs
+            }));
+            const fileInput = document.getElementById('customFile');
+            const fileName = fileInput.files[0] ? fileInput.files[0].name : 'No file attached';
+
+            // Create card for new task
+            const taskCard = document.createElement('div');
+            taskCard.className = 'card mb-3';
+            
+            let toolsList = selectedTools.map(tool => `<li id="tool-${tool.id}">${tool.name}</li>`).join('');
+            let downloadLinkText = fileName;
+            taskCard.innerHTML = `
+                <div class="card-body">
+                    <h5 class="card-title">${title}</h5>
+                    <p class="card-text">${description}</p>
+                    <p><strong>Tools:</strong></p>
+                    <ul>${toolsList}</ul>
+                    <a href="${fileName}" class="btn btn-secondary" download id="worksheet-${Date.now()}">${downloadLinkText}</a>
+                    <button class="btn btn-danger float-end" onclick="deleteTask(this)">Delete Task</button>
+                    <button class="btn btn-info float-end me-1" onclick="editTask(this)">Edit Task</button>
+                </div>
+            `;
+            document.getElementById('tasks-container').appendChild(taskCard);
+
+            // Reset the form
+            document.getElementById('edit-task-form').reset();
+        });
+
+        function deleteTask(button) {
+            button.closest('.card').remove();
+        }
+
+        function editTask(button) {
+            // Function to edit task details
+            alert('Edit functionality not implemented yet.');
+        }
+
+        document.getElementById('check-updates-btn').addEventListener('click', function() {
+            checkForUpdates();
+        });
+
+        document.getElementById('check-accessibility-btn').addEventListener('click', function() {
+            checkWorksheetAccessibility();
+        });
+
+        function checkForUpdates() {
+            // Extended updates data to include new tools
+            const updatesAvailable = {
+                'Talking Calculator': true,
+                'Screen Reader (Voiceover)': false,
+                'Math Melodies': true
+            };
+
+            // This now checks all tool spans by their generic class or id
+            const tools = document.querySelectorAll('[id^="tool-"]');
+            tools.forEach(tool => {
+                const toolName = tool.textContent;
+                if (updatesAvailable[toolName]) {
+                    const notification = document.createElement('span');
+                    notification.textContent = ' (Update available)';
+                    notification.style.color = 'red';
+                    tool.appendChild(notification);
+                }
+            });
+        }
+
+        function checkWorksheetAccessibility() {
+            // Updated to include a new worksheet with possible accessibility issues
+            const accessibilityIssues = {
+                'worksheet1.pdf': true,
+                'worksheet2.pdf': true // Assuming new worksheet might have issues
+            };
+
+            const worksheets = document.querySelectorAll('[id^="worksheet-"]');
+            worksheets.forEach(worksheet => {
+                const worksheetName = worksheet.getAttribute('href');
+                if (accessibilityIssues[worksheetName]) {
+                    const notification = document.createElement('span');
+                    notification.textContent = ' (Accessibility Issue)';
+                    notification.style.color = 'orange';
+                    worksheet.parentNode.insertBefore(notification, worksheet.nextSibling);
+                }
+            });
+        }
+
+        document.getElementById('select-ta').addEventListener('change', function() {
+            const email = this.value;
+            document.getElementById('email-pdf-btn').disabled = !email; // Enable the send button if an email is selected
+        });
+
+        function sendPDF() {
+            const email = document.getElementById('select-ta').value;
+            alert(`PDF has been sent to ${email}.`);
+            if (email) {
+                html2canvas(document.body).then(canvas => {
+                    const imgData = canvas.toDataURL('image/png');
+                    const pdf = new jsPDF({
+                        orientation: 'portrait',
+                        unit: 'pt',
+                        format: 'letter'
+                    });
+                    pdf.addImage(imgData, 'PNG', 0, 0);
+                    pdf.save('pageSnapshot.pdf'); // This saves the PDF locally
+
+                    // Alert to show that the PDF has been sent
+                    alert(`PDF has been sent to ${email}.`);
+                });
+            } else {
+                alert('No TA selected.');
+            }
+        }
+    </script>
+</body>
+
+</html>

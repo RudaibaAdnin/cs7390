@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review of Softwares</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4" tabindex="0">Review of Softwares</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <!-- List Group for Reviews with ARIA role defined -->
+                <ul class="list-group mb-4" id="review-list" role="list" aria-label="Software reviews">
+                    <!-- Initial Template for Existing Reviews with list roles -->
+                    <li role="listitem">
+                        <a href="#" class="list-group-item list-group-item-action" data-review='{"name":"Alice","software":"Software A","text":"Very intuitive and easy to use!","date":"2024-11-14","tag":"User-friendly"}' role="button" aria-expanded="false">
+                            Alice on Software A - 2024-11-14
+                        </a>
+                    </li>
+                    <li role="listitem">
+                        <a href="#" class="list-group-item list-group-item-action" data-review='{"name":"Bob","software":"Software B","text":"Needs performance improvements but still very powerful.","date":"2024-11-13","tag":"Feature-rich"}' role="button" aria-expanded="false">
+                            Bob on Software B - 2024-11-13
+                        </a>
+                    </li>
+                    <li role="listitem">
+                        <a href="#" class="list-group-item list-group-item-action" data-review='{"name":"Charlie","software":"Software C","text":"Great for data analysis, though a bit complex for beginners.","date":"2024-11-12","tag":"Complex"}' role="button" aria-expanded="false">
+                            Charlie on Software C - 2024-11-12
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Add Review Form -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <form id="add-review-form" aria-labelledby="form-heading">
+                            <h2 id="form-heading" class="h4 mb-3">Add a Review</h2>
+                            <div class="mb-3">
+                                <label for="reviewer-name" class="form-label">Your Name:</label>
+                                <input type="text" class="form-control" id="reviewer-name" required aria-required="true">
+                            </div>
+                            <div class="mb-3">
+                                <label for="software-select" class="form-label">Select Software:</label>
+                                <select class="form-select" id="software-select" required aria-required="true">
+                                    <option value="">Choose...</option>
+                                    <option value="Software A">Software A</option>
+                                    <option value="Software B">Software B</option>
+                                    <option value="Software C">Software C</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="review-date" class="form-label">Date:</label>
+                                <input type="date" class="form-control" id="review-date" aria-describedby="date-help">
+                                <small id="date-help" class="form-text text-muted">If no date is selected, today's date will be used.</small>
+                            </div>
+                            <div class="mb-3">
+                                <label for="review-tag" class="form-label">Tag (optional):</label>
+                                <input type="text" class="form-control" id="review-tag" aria-describedby="tag-help">
+                                <small id="tag-help" class="form-text text-muted">Adding a tag is optional but helpful.</small>
+                            </div>
+                            <div class="mb-3">
+                                <label for="review-text" class="form-label">Your Review:</label>
+                                <textarea class="form-control" id="review-text" rows="3" required aria-required="true"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit Review</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle (popper.js included) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.querySelectorAll('#review-list a').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                toggleDescription(this);
+            });
+            item.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleDescription(this);
+                }
+            });
+        });
+
+        const form = document.getElementById('add-review-form');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('reviewer-name').value;
+            const software = document.getElementById('software-select').value;
+            const tag = document.getElementById('review-tag').value;
+            const reviewText = document.getElementById('review-text').value;
+            const reviewDate = document.getElementById('review-date').value || new Date().toLocaleDateString(); // Use custom date or current date
+
+            if (software && reviewText) {
+                const review = {
+                    name: name,
+                    software: software,
+                    tag: tag,
+                    text: reviewText,
+                    date: reviewDate
+                };
+                addReviewToDOM(review);
+                form.reset(); // Reset the form after submission
+            }
+        });
+
+        function addReviewToDOM(review) {
+            const li = document.createElement('li');
+            li.setAttribute('role', 'listitem');
+            const newReviewLink = document.createElement('a');
+            newReviewLink.href = "#";
+            newReviewLink.className = "list-group-item list-group-item-action";
+            newReviewLink.textContent = `${review.name} on ${review.software} - ${review.date}`;
+            newReviewLink.setAttribute('data-review', JSON.stringify(review));
+            newReviewLink.setAttribute('role', 'button');
+            newReviewLink.setAttribute('aria-expanded', 'false');
+
+            newReviewLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                toggleDescription(this);
+            });
+            newReviewLink.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleDescription(this);
+                }
+            });
+
+            li.appendChild(newReviewLink);
+            document.getElementById('review-list').appendChild(li);
+        }
+
+        function toggleDescription(item) {
+            const alreadyActive = item.classList.contains('active');
+            document.querySelectorAll('#review-list a').forEach(i => {
+                i.classList.remove('active');
+                const desc = i.nextElementSibling;
+                if (desc && desc.classList.contains('description')) {
+                    desc.remove();
+                }
+            });
+
+            if (!alreadyActive) {
+                item.classList.add('active');
+                const review = JSON.parse(item.getAttribute('data-review'));
+                const desc = document.createElement('div');
+                desc.innerHTML = `<strong>Review:</strong> ${review.text}<br>
+                                  <strong>Reviewed by:</strong> ${review.name}<br>
+                                  <strong>Date:</strong> ${review.date}<br>
+                                  <strong>Tag:</strong> ${review.tag || 'N/A'}`;
+                desc.className = 'description list-group-item';
+                item.after(desc);
+            }
+        }
+    </script>
+</body>
+
+</html>
