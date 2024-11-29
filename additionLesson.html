@@ -28,29 +28,30 @@
         <div class="row justify-content-center">
             <div class="col-md-8 mb-4">
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body" id="tasks-container">
                         <h2 class="text-center mb-3" id="task-list-title">Existing Tasks</h2>
                         <section aria-labelledby="task-list-title">
                             <!-- Existing Task 1 -->
-                            <div class="card mb-3" id="tasks-container" aria-live="polite">
+                            <div class="card mb-3" id="task-container" aria-live="polite">
                                 <div class="card-body">
                                     <h3 class="card-title">Review Simple Addition</h3>
                                     <p class="card-text">Briefly remind students about what we talked about last time, tips and tricks to add single-digit numbers. Make sure to go over the logic using math melodies to help, since I'll use math melodies again later to talk about adding two-digit numbers.</p>
-                                    <p><strong>Tools:</strong></p>
+                                    <p><strong>Required Tools:</strong></p>
                                     <ul>
                                         <li id="tool-2">Math Melodies</li>
                                     </ul>
+                                    <a href="worksheet0.pdf" class="btn btn-secondary" download id="worksheet-0">Download Review Basic Addition Worksheet</a>
                                     <button class="btn btn-danger float-end" onclick="deleteTask(this)">Delete Task</button>
                                     <button class="btn btn-info float-end me-1" onclick="editTask(this)">Edit Task</button>
                                 </div>
                             </div>
 
                             <!-- Existing Task 2 -->
-                            <div class="card mb-3" id="tasks-container" aria-live="polite">
+                            <div class="card mb-3" id="task-container" aria-live="polite">
                                 <div class="card-body">
                                     <h3 class="card-title">Practice Simple Addition</h3>
                                     <p class="card-text">Students will do some practice problems with simple addition -- they will do it individually and the TA and I should check in with every student about how they are doing with the problems, and make sure they are only using talking calculator to check their answers. I will personally work with Joel for the first half, since he wasn't getting it last time. Also, Melanie and Gustavo will not be able to use the talking calculator, so the TA should work with them first while I talk to Joel.</p>
-                                    <p><strong>Tools:</strong></p>
+                                    <p><strong>Required Tools:</strong></p>
                                     <ul>
                                         <li id="tool-1">Talking Calculator</li>
                                         <li id="tool-3">Screen Reader (Voiceover)</li>
@@ -61,11 +62,11 @@
                                 </div>
                             </div>
                             <!-- Existing Task 3 -->
-                            <div class="card mb-3" id="tasks-container" aria-live="polite">
+                            <div class="card mb-3" id="task-container" aria-live="polite">
                                 <div class="card-body">
                                     <h3 class="card-title">Learning Advanced Addition</h3>
                                     <p class="card-text">I will talk to the students about adding two-digit numbers. I want to remember to make it sound non-intimidating, and just like adding one-digit numbers. I'll use math melodies to help and show how it's similar to adding one-digit numbers. Then, I'll plan to talk through the first problem in the worksheet, and call on each student to see if they have questions. Finally, we'll go through the second problem on the worksheet as a class.</p>
-                                    <p><strong>Tools:</strong></p>
+                                    <p><strong>Required Tools:</strong></p>
                                     <ul>
                                         <li id="tool-2">Math Melodies</li>
                                         <li id="tool-3">Screen Reader (Voiceover)</li>
@@ -76,7 +77,8 @@
                                 </div>
                             </div>
                         </section>
-
+                    </div>
+                    <div class="card-body mt-4">
                         <h2 class="text-center mb-3" id="new-task-title">Add New Task</h2>
                         <form id="edit-task-form" aria-labelledby="new-task-title">
                             <div class="mb-3">
@@ -189,7 +191,8 @@
         function checkWorksheetAccessibility() {
             // Updated to include a new worksheet with possible accessibility issues
             const accessibilityIssues = {
-                'worksheet1.pdf': true,
+                'worksheet0.pdf': true,
+                'worksheet1.pdf': false,
                 'worksheet2.pdf': true // Assuming new worksheet might have issues
             };
 

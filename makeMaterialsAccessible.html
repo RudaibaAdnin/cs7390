@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Make Materials Accessible</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-
 <body>
     <div class="container mt-5">
         <h1 class="text-center mb-4">Make Materials Accessible</h1>
@@ -16,20 +13,19 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-body">
-                        <label class="form-label" for="customFile">Check if materials are Accessible or Not</label>
+                        <h2 class="m-1 mb-4 form-label" for="customFile">Check if materials are Accessible or Not</h2>
                         <div class="input-group mb-3">
-                            <input type="file" class="form-control" id="customFile">
+                            <input type="file" class="form-control" id="customFile" aria-describedby="fileHelp">
                             <button class="btn btn-danger" type="button" onclick="checkFileAccessibility()">Check</button>
                         </div>
                         <button class="btn btn-success mb-3" type="button" onclick="generateAccessibilityReport()">Generate Accessibility Report</button>
-                        <div id="report-section" class="mt-4" style="display: none;">
-                            <h5>Accessibility Report</h5>
+                        <div id="report-section" class="mt-4" style="display: none;" aria-live="polite">
+                            <h2>Accessibility Report</h2>
                             <ul id="report-list" class="list-group"></ul>
                         </div>
                         <button class="btn btn-info mb-3" type="button" onclick="makePdfAccessible()">Make PDF Accessible with AI Tool</button>
-                        <!-- TA dropdown and Email button side by side -->
                         <div class="d-flex align-items-center mt-3">
-                            <select id="select-ta" class="form-select me-2" style="width: auto;">
+                            <select id="select-ta" class="form-select me-2" style="width: auto;" aria-label="Select Teaching Assistant">
                                 <option value="">Select TA</option>
                                 <option value="john@example.com">TA John</option>
                                 <option value="jane@example.com">TA Jane</option>
@@ -37,6 +33,26 @@
                             </select>
                             <button id="email-pdf-btn" class="btn btn-primary" onclick="sendPDF()" disabled>Send PDF to TA</button>
                         </div>
+                    </div>
+                </div>
+
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h2 class="m-1 mb-4 form-label" for="customFile1">Generate ALT Text with AI tool</h2>
+                            <div class="input-group mb-3">
+                                <input type="file" class="form-control" id="customFile1">
+                                <button class="btn btn-danger" type="button" onclick="generateAltText()">Generate ALT Text</button>
+                            </div>
+                             <p id="displayText" aria-live="assertive"></p>
+                            <div class="d-flex align-items-center mt-3">
+                                <select id="select-ta1" class="form-select me-2" style="width: auto;" aria-label="Select Teaching Assistant for Image">
+                                    <option value="">Select TA</option>
+                                    <option value="john@example.com">TA John</option>
+                                    <option value="jane@example.com">TA Jane</option>
+                                    <option value="max@example.com">TA Max</option>
+                                </select>
+                                <button id="email-image-btn" class="btn btn-primary" onclick="sendImage()" disabled>Send Image to TA</button>
+                            </div>
                     </div>
                 </div>
             </div>
@@ -96,6 +112,40 @@
                 return;
             }
             alert(`PDF has been sent to ${email}.`);
+        }
+
+        function generateAltText() {
+                // Example static ALT text
+                var altText = " A descriptive ALT text for an image file.";
+
+                // Find the file input element
+                var fileInput = document.getElementById('customFile1');
+
+                // Find the display element
+                var displayText = document.getElementById('displayText');
+
+                // Check if a file was selected
+                if (fileInput.files.length > 0) {
+                    // Set the display text
+                    displayText.innerText = "ALT Text:" + altText;
+                } else {
+                    // Inform the user to select a file if not already done
+                    displayText.innerText = "Please select a file first.";
+            }
+        }
+
+        document.getElementById('select-ta1').addEventListener('change', function () {
+            const email = this.value;
+            document.getElementById('email-image-btn').disabled = !email;
+        });
+
+        function sendImage() {
+            const email = document.getElementById('select-ta1').value;
+            if (!email) {
+                alert('No TA selected.');
+                return;
+            }
+            alert(`Image has been sent to ${email}.`);
         }
     </script>
 </body>
