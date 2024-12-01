@@ -194,22 +194,25 @@
         }
 
         function checkWorksheetAccessibility() {
-            // Updated to include a new worksheet with possible accessibility issues
             const accessibilityIssues = {
                 'worksheet0.pdf': true,
                 'worksheet1.pdf': false,
                 'worksheet2.pdf': true // Assuming new worksheet might have issues
             };
 
-            // Modify the selector to specifically target only the download links for worksheets
+            // Target only the worksheet download links
             const worksheets = document.querySelectorAll('a[id^="worksheet-"]');
             worksheets.forEach(worksheet => {
                 const worksheetName = worksheet.getAttribute('href');
+
+                // Clear any existing notifications
+                const nextSibling = worksheet.nextSibling;
+                if (nextSibling && nextSibling.tagName === 'SPAN' && nextSibling.textContent.includes('Accessibility Issue')) {
+                    worksheet.parentNode.removeChild(nextSibling);
+                }
+
+                // Add new notification if there is an accessibility issue
                 if (accessibilityIssues[worksheetName]) {
-                    if (worksheet.nextSibling && worksheet.nextSibling.textContent.includes('Accessibility Issue')) {
-                        // If the issue is already noted, do nothing
-                        return;
-                    }
                     const notification = document.createElement('span');
                     notification.textContent = ' (Accessibility Issue)';
                     notification.style.color = 'orange';
@@ -217,6 +220,7 @@
                 }
             });
         }
+
 
 
 
