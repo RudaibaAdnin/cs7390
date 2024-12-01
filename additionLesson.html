@@ -41,10 +41,11 @@
                                         <li id="tool-2">Math Melodies</li>
                                     </ul>
                                     <a href="worksheet0.pdf" class="btn btn-secondary" download id="worksheet-0">Download Review Basic Addition Worksheet</a>
-                                    <div class="button-group float-end" style="display: flex; justify-content: flex-end;">
+                                    <div class="row"><div class="button-group float-end" style="display: flex; justify-content: flex-end;">
                                         <button class="btn btn-info me-1" onclick="editTask(this)">Edit Task</button>
                                         <button class="btn btn-danger" onclick="deleteTask(this)">Delete Task</button>
                                     </div>
+                                  </div>
                                 </div>
                             </div>
 
@@ -59,10 +60,11 @@
                                         <li id="tool-3">Screen Reader (Voiceover)</li>
                                     </ul>
                                     <a href="worksheet1.pdf" class="btn btn-secondary" download id="worksheet-1">Download Basic Addition Worksheet</a>
-                                    <div class="button-group float-end" style="display: flex; justify-content: flex-end;">
+                                    <div class="row"><div class="button-group float-end" style="display: flex; justify-content: flex-end;">
                                         <button class="btn btn-info me-1" onclick="editTask(this)">Edit Task</button>
                                         <button class="btn btn-danger" onclick="deleteTask(this)">Delete Task</button>
                                     </div>
+                                  </div>
                                 </div>
                             </div>
                             <!-- Existing Task 3 -->
@@ -76,10 +78,11 @@
                                         <li id="tool-3">Screen Reader (Voiceover)</li>
                                     </ul>
                                     <a href="worksheet2.pdf" class="btn btn-secondary" download id="worksheet-2">Download Advanced Addition Worksheet</a>
-                                    <div class="button-group float-end" style="display: flex; justify-content: flex-end;">
+                                    <div class="row"><div class="button-group float-end" style="display: flex; justify-content: flex-end;">
                                         <button class="btn btn-info me-1" onclick="editTask(this)">Edit Task</button>
                                         <button class="btn btn-danger" onclick="deleteTask(this)">Delete Task</button>
                                     </div>
+                                  </div>
                                 </div>
                             </div>
                         </section>
@@ -143,9 +146,10 @@
                     <p><strong>Tools:</strong></p>
                     <ul>${toolsList}</ul>
                     <a href="${fileName}" class="btn btn-secondary" download id="worksheet-${Date.now()}">${downloadLinkText}</a>
-                    <div class="button-group float-end" style="display: flex; justify-content: flex-end;">
+                    <div class="row"><div class="button-group float-end" style="display: flex; justify-content: flex-end;">
                         <button class="btn btn-info me-1" onclick="editTask(this)">Edit Task</button>
                         <button class="btn btn-danger" onclick="deleteTask(this)">Delete Task</button>
+                    </div>
                     </div>
                 </div>
             `;
