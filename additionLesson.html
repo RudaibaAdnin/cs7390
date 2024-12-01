@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <div class="container mt-5">
+    <div class="container mt-5" role="main">
         <h1 class="text-center mb-4" id="main-title">Lesson: Addition</h1>
         <div class="d-flex justify-content-center mb-4" role="group" aria-labelledby="main-title">
             <!-- Combined action buttons and TA dropdown -->
@@ -194,35 +194,24 @@
         }
 
         function checkWorksheetAccessibility() {
-    // Assume worksheet PDFs have potential accessibility issues
-    const accessibilityIssues = {
-        'worksheet0.pdf': true,
-        'worksheet1.pdf': false,
-        'worksheet2.pdf': true
-    };
+            // Updated to include a new worksheet with possible accessibility issues
+            const accessibilityIssues = {
+                'worksheet0.pdf': true,
+                'worksheet1.pdf': false,
+                'worksheet2.pdf': true // Assuming new worksheet might have issues
+            };
 
-    const worksheets = document.querySelectorAll('[id^="worksheet-"]');
-    worksheets.forEach(worksheet => {
-        const worksheetName = worksheet.getAttribute('href');
-        if (accessibilityIssues[worksheetName]) {
-            // Create an ID for the notification
-            const notificationId = 'accessibility-notice-' + worksheet.id;
-
-            // Create the notification element
-            const notification = document.createElement('span');
-            notification.id = notificationId;
-            notification.textContent = ' (Accessibility Issue)';
-            notification.style.color = 'orange';
-            notification.setAttribute('aria-hidden', 'true'); // Hide from screen readers as individual element
-
-            // Append the notification visually but use aria-describedby for contextual announcement
-            worksheet.parentNode.insertBefore(notification, worksheet.nextSibling);
-
-            // Set aria-describedby on the worksheet link to point to the notification
-            worksheet.setAttribute('aria-describedby', notificationId);
+            const worksheets = document.querySelectorAll('[id^="worksheet-"]');
+            worksheets.forEach(worksheet => {
+                const worksheetName = worksheet.getAttribute('href');
+                if (accessibilityIssues[worksheetName]) {
+                    const notification = document.createElement('span');
+                    notification.textContent = ' (Accessibility Issue)';
+                    notification.style.color = 'orange';
+                    worksheet.parentNode.insertBefore(notification, worksheet.nextSibling);
+                }
+            });
         }
-    });
-}
 
 
         document.getElementById('select-ta').addEventListener('change', function() {
