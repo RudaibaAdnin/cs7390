@@ -197,36 +197,36 @@
             });
         }
 
-    function checkWorksheetAccessibility() {
-    const accessibilityIssues = {
-        'worksheet0.pdf': true,
-        'worksheet1.pdf': false,
-        'worksheet2.pdf': true // Assuming new worksheet might have issues
-    };
+        function checkWorksheetAccessibility() {
+            const accessibilityIssues = {
+                'worksheet0.pdf': true,
+                'worksheet1.pdf': false,
+                'worksheet2.pdf': true // Assuming new worksheet might have issues
+            };
 
-    // Select only the worksheet download links
-    const worksheets = document.querySelectorAll('a[id^="worksheet-"]');
-    worksheets.forEach(worksheet => {
-        const worksheetName = worksheet.getAttribute('href');
+            // Select only the worksheet download links
+            const worksheets = document.querySelectorAll('a[id^="worksheet-"]');
+            worksheets.forEach(worksheet => {
+                const worksheetName = worksheet.getAttribute('href');
 
-        // Remove existing accessibility notifications
-        let existingNotification = document.getElementById(worksheet.id + '-accessibility');
-        if (existingNotification) {
-            existingNotification.remove(); // Remove the old notification if it exists
-        }
+                // Remove existing notifications
+                let notification = worksheet.parentNode.querySelector('.accessibility-notice');
+                if (notification) {
+                    worksheet.parentNode.removeChild(notification);
+                }
 
-        // Add new notification if there is an accessibility issue
-        if (accessibilityIssues[worksheetName]) {
-            const notification = document.createElement('span');
-            notification.id = worksheet.id + '-accessibility'; // Unique ID for the notification
-            notification.className = 'accessibility-notice sr-only'; // Use Bootstrap 'sr-only' class to hide visually but keep for screen readers
-            notification.textContent = 'Accessibility issue';
+                // Add new notification if there is an accessibility issue
+                if (accessibilityIssues[worksheetName]) {
+                    notification = document.createElement('span');
+                    notification.className = 'accessibility-notice'; // Use a class to style or hide this span as needed
+                    notification.textContent = ' (Accessibility Issue)';
+                    notification.style.color = 'orange';
+                    notification.style.marginLeft = '10px'; // Add some space to separate from the link
+                    worksheet.parentNode.insertBefore(notification, worksheet.nextSibling);
+                }
+            });
+    }
 
-            worksheet.setAttribute('aria-describedby', notification.id); // Link notification to the worksheet link via aria-describedby
-            worksheet.parentNode.appendChild(notification); // Append to ensure it's separate from other elements
-        }
-    });
-}
 
 
 
