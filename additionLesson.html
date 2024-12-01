@@ -201,10 +201,15 @@
                 'worksheet2.pdf': true // Assuming new worksheet might have issues
             };
 
-            const worksheets = document.querySelectorAll('[id^="worksheet-"]');
+            // Modify the selector to specifically target only the download links for worksheets
+            const worksheets = document.querySelectorAll('a[id^="worksheet-"]');
             worksheets.forEach(worksheet => {
                 const worksheetName = worksheet.getAttribute('href');
                 if (accessibilityIssues[worksheetName]) {
+                    if (worksheet.nextSibling && worksheet.nextSibling.textContent.includes('Accessibility Issue')) {
+                        // If the issue is already noted, do nothing
+                        return;
+                    }
                     const notification = document.createElement('span');
                     notification.textContent = ' (Accessibility Issue)';
                     notification.style.color = 'orange';
@@ -212,6 +217,7 @@
                 }
             });
         }
+
 
 
         document.getElementById('select-ta').addEventListener('change', function() {
